@@ -30,5 +30,6 @@ class ConfigParser extends BaseConfigParser
 
 	public function write()
 	{
+		// pass
 	}
 }
