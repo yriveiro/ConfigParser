@@ -27,6 +27,11 @@ abstract class BaseConfigParser
 		return array_keys($this->sections);
 	}
 
+	public function dump()
+	{
+		return $this->sections;
+	}
+
 	public function getSection($section)
 	{
 		if (!array_key_exists($section, $this->sections)) {
@@ -127,6 +132,7 @@ abstract class BaseConfigParser
 			if ($this->hasOption($section, $option)) {
 				$_section = $this->getSection($section);
 				unset($_section[$option]);
+
 				$this->sections[$section] = $_section;
 			} else {
 				throw new NoOptionError();
