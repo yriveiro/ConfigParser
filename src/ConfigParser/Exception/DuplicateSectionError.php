@@ -8,7 +8,7 @@ use \Exception;
 class DuplicateSectionError extends Exception
 {
 	public function __construct(
-		$message = 'Option not exists.',
+		$message = 'Duplicated section error.',
 		$code = 0,
 		Exception $previous = null
 	) {
