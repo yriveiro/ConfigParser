@@ -35,7 +35,7 @@ abstract class BaseConfigParser
 	public function getSection($section)
 	{
 		if (!array_key_exists($section, $this->sections)) {
-			throw new KeyError();
+			throw new KeyError(sprintf("Key %s not exists", $section));
 		}
 
 		return $this->sections[$section];
