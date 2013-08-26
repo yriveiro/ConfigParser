@@ -86,11 +86,19 @@ abstract class BaseConfigParser
 		try {
 			$_section = $this->getSection($section);
 		} catch (KeyError $e) {
-			throw new NoSectionError($section);
+			$msg = sprintf("Section %s not exists in config file.", $section);
+
+			throw new NoSectionError($msg);
 		}
 
 		if (!array_key_exists($option, $_section)) {
-			throw new NoOptionError;
+			$msg = sprintf(
+				"Option %s not exists in section %s.",
+				$option, 
+				$section
+			);
+
+			throw new NoOptionError($msg);
 		}
 
 		return $this->sections[$section][$option];
