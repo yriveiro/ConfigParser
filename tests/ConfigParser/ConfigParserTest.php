@@ -54,7 +54,7 @@ class ConfigParserTest extends PHPUnit_Framework_TestCase
 	}
 
     /**
-     * @expectedException	\ConfigParser\Exception\KeyError
+     * @expectedException	\ConfigParser\Exception\NoSectionError
      */
 	public function testGetSectionFail()
 	{

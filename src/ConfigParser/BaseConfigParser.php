@@ -35,7 +35,11 @@ abstract class BaseConfigParser
 	public function getSection($section)
 	{
 		if (!array_key_exists($section, $this->sections)) {
-			throw new KeyError(sprintf("Key %s not exists", $section));
+			$msg = sprintf(
+				"Section \"%s\" doesn't exists in config file.",
+				$section
+			);
+			throw new NoSectionError($msg);
 		}
 
 		return $this->sections[$section];
@@ -47,7 +51,7 @@ abstract class BaseConfigParser
 			if (is_array($this->getSection($section))) {
 				return true;
 			}
-		} catch (KeyError $e) {
+		} catch (NoSectionError $e) {
 			return false;
 		}
 	}
@@ -64,7 +68,11 @@ abstract class BaseConfigParser
 	public function removeSection($section)
 	{
 		if (!$this->hasSection($section)) {
-			throw new NoSectionError();
+			$msg = sprintf(
+				"Section \"%s\" doesn't exists in config file.",
+				$section
+			);
+			throw new NoSectionError($msg);
 		}
 
 		unset($this->sections[$section]);
@@ -72,29 +80,19 @@ abstract class BaseConfigParser
 
 	public function options($section)
 	{
-		try {
-			$_section = $this->getSection($section);
+		$_section = $this->getSection($section);
 
-			return array_keys($_section);
-		} catch (KeyError $e) {
-			throw new NoSectionError($section);
-		}
+		return array_keys($_section);
 	}
 
 	public function getOption($section, $option)
 	{
-		try {
-			$_section = $this->getSection($section);
-		} catch (KeyError $e) {
-			$msg = sprintf("Section %s not exists in config file.", $section);
-
-			throw new NoSectionError($msg);
-		}
+		$_section = $this->getSection($section);
 
 		if (!array_key_exists($option, $_section)) {
 			$msg = sprintf(
-				"Option %s not exists in section %s.",
-				$option, 
+				"Option \"%s\" doesn't exists in section %s.",
+				$option,
 				$section
 			);
 
@@ -106,11 +104,7 @@ abstract class BaseConfigParser
 
 	public function hasOption($section, $option)
 	{
-		try {
-			$this->getSection($section);
-		} catch (KeyError $e) {
-			throw new NoSectionError($section);
-		}
+		$this->getSection($section);
 
 		try {
 			 if ($this->getOption($section, $option)) {
@@ -123,11 +117,7 @@ abstract class BaseConfigParser
 
 	public function setOption($section, $option, $value='')
 	{
-		try {
-			$_section = $this->getSection($section);
-		} catch (KeyError $e) {
-			throw new NoSectionError($section);
-		}
+		$_section = $this->getSection($section);
 
 		$_section[$option] = $value;
 
@@ -136,17 +126,13 @@ abstract class BaseConfigParser
 
 	public function removeOption($section, $option)
 	{
-		try {
-			if ($this->hasOption($section, $option)) {
-				$_section = $this->getSection($section);
-				unset($_section[$option]);
+		if ($this->hasOption($section, $option)) {
+			$_section = $this->getSection($section);
+			unset($_section[$option]);
 
-				$this->sections[$section] = $_section;
-			} else {
-				throw new NoOptionError();
-			}
-		} catch (NoSectionError $e) {
-			throw new NoSectionError($section);
+			$this->sections[$section] = $_section;
+		} else {
+			throw new NoOptionError();
 		}
 	}
 
